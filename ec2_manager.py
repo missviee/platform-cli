@@ -13,7 +13,7 @@ AMI_MAP = {
 def _latest_ami(os_name: str, session):
     """
     Return the latest AMI ID for the chosen OS using SSM public parameters.
-    os_name: 'ubuntu' or 'amazon-linux'
+    Os_name: 'ubuntu' or 'amazon-linux'
     """
     ssm = session.client("ssm")
     os_key = os_name.strip().lower()

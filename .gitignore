@@ -1,0 +1,10 @@
+# Python cache / venv / IDE
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.idea/
+.DS_Store
