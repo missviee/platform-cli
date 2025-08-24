@@ -1,6 +1,7 @@
 from botocore.exceptions import ClientError, BotoCoreError
 from utils import default_tags, make_session
 
+
 ALLOWED_INSTANCE_TYPES = {"t3.micro", "t2.small"}
 MAX_RUNNING = 2
 
@@ -76,3 +77,74 @@ def create_instance(instance_type: str, os_name: str, profile: str, region: str)
         print(f"Success: created instance {inst_id} (state: {state}).")
     except (ClientError, BotoCoreError) as e:
         print(f"Error: failed to create instance ({e}).")
+
+def start_instance(instance_id: str, profile: str, region: str):
+    """Start a CLI-created EC2 instance."""
+    session = make_session(profile, region)
+    ec2 = session.client("ec2")
+
+    # Verify instance is CLI-created
+    filters = [
+        {"Name": "instance-id", "Values": [instance_id]},
+        {"Name": "tag:CreatedBy", "Values": ["platform-cli"]},
+        {"Name": "tag:Owner", "Values": ["duvie"]},
+    ]
+    resp = ec2.describe_instances(Filters=filters)
+    if not resp.get("Reservations"):
+        print(f"Error: instance {instance_id} not managed by this CLI.")
+        return
+
+    try:
+        ec2.start_instances(InstanceIds=[instance_id])
+        print(f"Success: starting instance {instance_id}.")
+    except (ClientError, BotoCoreError) as e:
+        print(f"Error: failed to start instance ({e}).")
+
+
+def stop_instance(instance_id: str, profile: str, region: str):
+    """Stop a CLI-created EC2 instance."""
+    session = make_session(profile, region)
+    ec2 = session.client("ec2")
+
+    # Verify instance is CLI-created
+    filters = [
+        {"Name": "instance-id", "Values": [instance_id]},
+        {"Name": "tag:CreatedBy", "Values": ["platform-cli"]},
+        {"Name": "tag:Owner", "Values": ["duvie"]},
+    ]
+    resp = ec2.describe_instances(Filters=filters)
+    if not resp.get("Reservations"):
+        print(f"Error: instance {instance_id} not managed by this CLI.")
+        return
+
+    try:
+        ec2.stop_instances(InstanceIds=[instance_id])
+        print(f"Success: stopping instance {instance_id}.")
+    except (ClientError, BotoCoreError) as e:
+        print(f"Error: failed to stop instance ({e}).")
+
+def list_instances(profile: str, region: str):
+    """List all EC2 instances created by this CLI."""
+    session = make_session(profile, region)
+    ec2 = session.client("ec2")
+
+    filters = [
+        {"Name": "tag:CreatedBy", "Values": ["platform-cli"]},
+        {"Name": "tag:Owner", "Values": ["duvie"]},
+    ]
+
+    resp = ec2.describe_instances(Filters=filters)
+    instances = []
+    for r in resp.get("Reservations", []):
+        for i in r["Instances"]:
+            inst_id = i["InstanceId"]
+            state = i.get("State", {}).get("Name", "unknown")
+            instances.append((inst_id, state))
+
+    if not instances:
+        print("No instances created by this CLI.")
+        return
+
+    for inst_id, state in instances:
+        print(f"{inst_id} - {state}")
+
