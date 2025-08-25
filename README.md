@@ -44,8 +44,38 @@ For example: `python cli.py create-ec2 --help`
 
 ---
 
-## Getting Started
+## Prerequisites
+### Before running the CLI, make sure you have:
+1. **Python & Virtual Environment**
+   - Python version used: 3.13
+   - IDE used: PyCharm (optional, any code editor works)
 
+
+2. **AWS Credentials**
+Configure AWS CLI credentials by running:
+   ```bash
+   aws configure
+You will be prompted for:
+- AWS Access Key ID
+- AWS Secret Access Key
+- Default region name (e.g., us-east-1)
+- Default output format (e.g., json)
+
+If you don’t have access keys yet:
+- Log in to your AWS Management Console.
+- Go to My Security Credentials (click on your account name → Security Credentials).
+- Under Access keys, click Create access key.
+- Copy the Access Key ID and Secret Access Key and keep them safe.
+- Then run `aws configure` to set them up locally.
+Note: Keep your secret key private and never share it in your code or repository.
+
+### Python Modules Used
+This CLI uses the following modules (already in `requirements.txt`):
+- `boto3` – for AWS services (EC2, S3, Route53)
+[Learn more about boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+- `click` – to handle the CLI commands [Learn more about Click](https://click.palletsprojects.com/)
+- `botocore` – for AWS API error handling [Learn more about Botocore](https://botocore.amazonaws.com/)
+# Getting Started
 1. Clone the repo and create a virtual environment:
 ```bash
 git clone <your-repo-url>
@@ -64,14 +94,16 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
-CLI Usage
+## CLI Usage
 
-Type
+Type the following:
 ```bash
 python cli.py --help 
 ```
-to see all commands. Commands follow this structure: resource-action, for example:
+To see all commands. 
+- Tip: Replace placeholders like <id> or <zone-id> with actual AWS values from your account.
 
+Commands follow this structure: resource-action, for example:
 ## EC2
 ```bash
 python cli.py create-ec2 --instance_type t3.micro --os_name ubuntu --region us-east-1
@@ -79,7 +111,11 @@ python cli.py list-ec2 --region us-east-1
 python cli.py start-ec2 --instance_id <id> --region us-east-1
 python cli.py stop-ec2 --instance_id <id> --region us-east-1
 ```
-
+### My Output screenshots for EC2:
+![My output screenshot for EC2 commands](output-screenshots/ec2.png)
+Here it shows you can only run 2 instances:
+![My output screenshot for EC2 commands](output-screenshots/ec2limit.png)
+---
 ## S3 
 ```bash
 python cli.py create-s3 --bucket_name mybucket --public True --region us-east-1
@@ -87,7 +123,13 @@ python cli.py list-s3 --region us-east-1
 python cli.py upload-s3 --bucket_name mybucket --file_path ./file.txt
 python cli.py list-s3-files --bucket_name mybucket
 ```
+### My Output screenshots for S3:
+Shows that when creating a public bucket, the cli will ask for confirmation:
+![My output screenshot for S3 commands](output-screenshots/s3.png)
+This has no region specified but still works:
+![My output screenshot for S3 commands](output-screenshots/s3noregionspecified.png)
 
+---
 ## Route53
 ```bash
 python cli.py create-route53 --zone_name example.com
@@ -97,5 +139,12 @@ python cli.py create-record-cli --zone_id <zone-id> --name www.example.com --typ
 python cli.py update-record-cli --zone_id <zone-id> --name www.example.com --type_ A --value 1.2.3.5 --ttl 300
 python cli.py delete-record-cli --zone_id <zone-id> --name www.example.com --type_ A --value 1.2.3.5
 ```
-Thank you for using the CLI!
-Made with ❤️ by Duvie
+### My Output screenshots for Route53:
+![My output screenshot for Route53 commands](output-screenshots/route53.png)
+
+---
+## Thank You for Using Platform CLI
+
+Created by **Duvie**, 2025  
+
+

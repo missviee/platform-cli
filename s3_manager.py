@@ -68,7 +68,6 @@ def list_buckets(profile: str, region: str):
     except (ClientError, BotoCoreError) as e:
         print(f"Error: could not list buckets ({e}).")
 
-
 def upload_file(bucket_name: str, file_path: str, profile: str, region: str, object_name: str = None):
     """
     Upload a file to a CLI-managed S3 bucket.

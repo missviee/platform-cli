@@ -100,7 +100,6 @@ def start_instance(instance_id: str, profile: str, region: str):
     except (ClientError, BotoCoreError) as e:
         print(f"Error: failed to start instance ({e}).")
 
-
 def stop_instance(instance_id: str, profile: str, region: str):
     """Stop a CLI-created EC2 instance."""
     session = make_session(profile, region)

@@ -6,8 +6,7 @@ from route53_manager import create_zone, list_zones, list_records, create_record
 @click.group()
 def cli():
     """Platform CLI - Self Service AWS Management"""
-
-# Ec2
+# EC2
 @cli.command()
 @click.option("--instance_type", default="t2.micro", help="EC2 instance type (t3.micro or t2.small only)")
 @click.option("--os_name", default="ubuntu", help="OS: ubuntu or amazon-linux")
@@ -81,7 +80,7 @@ def list_route53(region):
     """List CLI-created Route53 DNS zones"""
     list_zones(profile="duvie-platform-cli", region=region)
 
-# -------------------- Route53 Records -------------------- #
+# Route53 Records
 @cli.command()
 @click.option("--zone_id", prompt=True, help="Hosted zone ID")
 def list_records_cli(zone_id):
